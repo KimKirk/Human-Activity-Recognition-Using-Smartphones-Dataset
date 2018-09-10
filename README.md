@@ -1,6 +1,8 @@
 # Samsung Galaxy S II Smartphone Analysis
 - Human Activity Recognition Data Analysis Using Samsung Galaxy S II Smartphone
 
+- Healthcare: Wearables/Sensors
+
 - Descriptive multivariate data analysis was conducted in R using "Human Activity Recognition Using Smartphones Dataset Version 1.0" from the UC Irvine Machine Learning Repository that includes triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration, triaxial Angular velocity from the gyroscope, 561 variables with time and frequency domain data, activity labels, and identifiers of the subject who carried out the experiment.
 
 - Seven data files were gathered, merged, munged, and organized to create one data set. The data was analyzed and descriptive statistics were generated for the mean was calculated of each feature that contained the mean or standard deviation for that feature. A barplot visualization shows the mean for the subject's activity for each feature.
@@ -15,6 +17,7 @@
     - install R essentials packages for use in Jupyter Notebook.
     - at command line enter "conda install -c r r-essentials" without quotes.
     - install IRKernel, a kernel for R https://irkernel.github.io/installation/
+- Use R Studio or other application to read R-Markdown file.
 
 ## Steps to Transformation:
 - Data was downloaded from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
