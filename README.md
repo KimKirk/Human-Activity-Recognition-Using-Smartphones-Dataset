@@ -8,14 +8,13 @@
 - The "Human Activity Recognition Using Smartphones Dataset Version 1.0" and represents six activities subject's carried out during experiments using the Samsung Galaxy S II smartphone. A complete explanation can be found at the website: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
 ## Processing Instructions:
-- R script 
+- https://kimkirk.github.io/Human-Activity-Recognition-Using-Smartphones-Dataset/ to view HMTL version of report
 - To improve reproducibility of the data analysis, a Jupyter Notebook file and RMD file are included.
 - To read Jupyter Notebook file:
   - Use R for Jupyter Notebook
     - install R essentials packages for use in Jupyter Notebook.
     - at command line enter "conda install -c r r-essentials" without quotes.
     - install IRKernel, a kernel for R https://irkernel.github.io/installation/
-- Use R Studio or other application to read R script file.
 
 ## Steps to Transformation:
 - Data was downloaded from https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
