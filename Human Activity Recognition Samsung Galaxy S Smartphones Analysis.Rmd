@@ -1,0 +1,183 @@
+---
+title: "Samsung Galaxy S II Smartphone Analysis"
+author: "Kim Kirk"
+date: "December 15, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Samsung Galaxy S II Smartphone Analysis
+### Analysis of accelerometers from Samsung Galaxy S smartphone
+
+### Synopsis
+A descriptive multivariate data analyis was conducted on the accelerometers data from the Samsung Galaxy S smartphone. Accelerometers include triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration, triaxial Angular velocity from the gyroscope; with 561 variables with time and frequency domain data, activity labels, and identifiers of the subject who carried out the experiment. 7 data sets from UC Irvine Center for Machine Learning and Intelligent Systems were imported, merged, cleaned, and analyzed. The average was calculated for mean and standard deviation for each variable for each subject's activity.
+
+
+#### Data Processing
+Five training and test data sets are downloaded as text files from the specified URL and loaded into R as vectors. Two training and test data sets are downloaded as text files from the specified URL and loaded into R as data frames.
+```{r }
+##set file path to save download to
+path <- file.path(paste(getwd(), 'getdata_projectfiles_UCI HAR Dataset.zip', sep = "/"))
+##set url for download
+url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+
+##download file and save to working directory
+download.file(url, path)
+
+##unzip file and put it in user's current working directory
+chooseFile<-file.choose()
+workingDir<-getwd()
+unzip(chooseFile,exdir = workingDir)
+
+
+##set working directory to inside of unzipped folder
+setwd(paste(getwd(), 'UCI HAR Dataset', sep = "/"))
+
+##import "features" as vector
+features_labels <- scan("./features.txt", what = "text", sep = "\t")
+
+##import "y_test" as vector
+test_activities <- scan("./test/y_test.txt", what = "numeric", sep = "\t")
+test_activities <- as.numeric(test_activities)
+
+##import "y_train" as vector
+train_activities <- scan("./train/y_train.txt", what = "numeric", sep = "\t")
+train_activities <- as.numeric(train_activities)
+
+##import "subject_test" as vector
+test_subjects <- scan("./test/subject_test.txt", what = "numeric", sep = "\t")
+test_subjects <- as.numeric(test_subjects)
+
+##import "subject_train" as vector
+train_subjects <- scan("./train/subject_train.txt", what = "numeric", sep = "\t")
+train_subjects <- as.numeric(train_subjects)
+
+##import "X_test" file
+test_features <- read.table("./test/X_test.txt", header = FALSE, col.names = features_labels, na.strings = c(" ", "NA"), stringsAsFactors = FALSE, strip.white = TRUE, colClasses = "numeric")
+
+##import "X_train" file
+train_features <- read.table("./train/X_train.txt", header = FALSE, col.names = features_labels, na.strings = c(" ", "NA"), stringsAsFactors = FALSE, strip.white = TRUE, colClasses = "numeric")
+
+##create vector to use as labels input for factors
+factors_labels <- c("WALKING", "WALKING_UPSTAIRS", "WALKING_DOWNSTAIRS", "SITTING", "STANDING", "LAYING")
+```
+
+
+Test data and training data is converted to factors and merged with the features vector. 
+
+```{r }
+##convert test_activities and test_subjects to factors
+##bind test_activities to factors and features vector
+test_bind_final <- cbind(factor(test_subjects, labels = c("Subject 2", "Subject 4", "Subject 9", "Subject 10", "Subject 12", "Subject 13", "Subject 18", "Subject 20", "Subject 24")), 
+    cbind(factor(test_activities, labels = factors_labels), test_features))
+
+##convert train_activities and train_subjects to factors
+##bind train_activities to factors and features vector
+train_bind_final <- cbind(factor(train_subjects, labels = c("Subject 1", "Subject 3", "Subject 5", "Subject 6", "Subject 7", "Subject 8", "Subject 11", "Subject 14", "Subject 15", "Subject 16", "Subject 17", "Subject 19", "Subject 21", "Subject 22", "Subject 23", "Subject 25", "Subject 26", "Subject 27", "Subject 28", "Subject 29", "Subject 30")), 
+    cbind(factor(train_activities, labels = factors_labels), train_features))
+
+```
+
+
+First and second features of the merged test and training data sets are renamed to improve human readablility following tidy data principles.
+```{r }
+##rename first and second variable of test_bind_final to be more human readable
+colnames(test_bind_final)[2] <- "activities"
+colnames(test_bind_final)[1] <- "subject"
+
+##rename first and second variable of train_bind_final to be more human readable
+colnames(train_bind_final)[2] <- "activities"
+colnames(train_bind_final)[1] <- "subject"
+
+```
+
+
+The testing data set and training data set are merged together to create the complete data set.
+
+```{r }
+##bind test and train datasets together
+combined_test_train_datasets <- rbind(test_bind_final, train_bind_final)
+
+
+```
+
+Packages for tidying, analyzing, and visualizing data are loaded.
+
+```{r}
+
+##check for package, prompt user to download if no required package, load library
+##credit Matthew on StackOverflow https://stackoverflow.com/users/4125693/matthew
+using<-function(...) {
+    libs<-unlist(list(...))
+    req<-unlist(lapply(libs,require,character.only=TRUE))
+    need<-libs[req==FALSE]
+    n<-length(need)
+    if(n>0){
+        libsmsg<-if(n>2) paste(paste(need[1:(n-1)],collapse=", "),",",sep="") else need[1]
+        print(libsmsg)
+        if(n>1){
+            libsmsg<-paste(libsmsg," and ", need[n],sep="")
+        }
+        libsmsg<-paste("The following packages could not be found: ",libsmsg,"\n\r\n\rInstall missing packages?",collapse="")
+        if(winDialog(type = c("yesno"), libsmsg)=="YES"){       
+            install.packages(need)
+            lapply(need,require,character.only=TRUE)
+        }
+    }
+}
+using("dplyr")
+using("stringr")
+using("RColorBrewer")
+
+```
+#### Analysis
+
+Accelerometer averages for each feature that includes mean and standard deviation is found and grouped by each subject's activity.
+```{r}
+##return columns for "subject", "activities", "mean", and "std"
+##calculate mean for each "features" variable grouped by subject and activity
+final_tidy_data <- combined_test_train_datasets %>% select(subject, activities, matches("mean"), matches("std")) %>%
+    group_by(subject, activities) %>% summarise_if(is.numeric, mean, na.rm = TRUE)
+
+
+```
+
+#### Conclusion
+
+A barplot is created for each subject by activity and accelerometers' average value for mean and standard deviation.
+
+```{r}
+##row counter
+j <- 1
+##subjects counter
+subjects <- as.vector(as.matrix(unique(final_tidy_data[,1])))
+##Let's set the universal properties of the graphic so 
+    ##that each plot fits nicely on its own screen so that all variables 
+    ##can be clearly seen and the legend is not obscured.
+par(mfrow= c(1,1), mar =  c(2.1, 2.1, 2.1, 2.1))
+##for each value in the "subjects" vector subset the appropriate rows and 
+    ##columns then plot a barplot.
+for(subject in subjects ) {
+    ##go to dataset
+    ##pull out 6 rows and all columns from 3 to the entire length of the data set
+    matrix_final_tidy_data <- final_tidy_data[1:6 * j,3:length(final_tidy_data) ]
+    ##create a barplot
+    barplot(as.matrix(matrix_final_tidy_data), main = "Human Activity Recognition Using Samsung Galaxy S II Smartphone",
+            sub = subject,
+            xlab = "Feature Variable Label",
+            ylab = "Standard Gravity Units (g)",
+            legend.text = factors_labels,
+            args.legend = list("topright", inset = .0001, bty = "n", cex=0.6),
+            names.arg =  str_extract(colnames(matrix_final_tidy_data), "^X[0-9]*\\."),
+            col = brewer.pal(n=6,name="RdYlBu"),
+            space = 0.5
+    )
+    ##increment the row counter by 1
+    j <- j + 1
+
+}
+
+```
