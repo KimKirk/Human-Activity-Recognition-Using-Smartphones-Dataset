@@ -5,7 +5,7 @@
 
 - Descriptive multivariate data analysis was conducted in R using "Human Activity Recognition Using Smartphones Dataset Version 1.0" from the UC Irvine Machine Learning Repository that includes triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration, triaxial Angular velocity from the gyroscope, 561 variables with time and frequency domain data, activity labels, and identifiers of the subject who carried out the experiment.
 
-- Seven data files were gathered, merged, munged, and organized to create one data set. The data was analyzed and descriptive statistics were generated for the mean was calculated of each feature that contained the mean or standard deviation for that feature. A barplot visualization shows the mean for the subject's activity for each feature.
+- Seven data files were gathered, merged, munged, and organized to create one data set. The data was analyzed and descriptive statistics were generated. The mean was calculated of each feature that contained the mean or standard deviation for that feature. A barplot visualization shows the mean for the subject's activity for each feature.
 
 - The "Human Activity Recognition Using Smartphones Dataset Version 1.0" and represents six activities subject's carried out during experiments using the Samsung Galaxy S II smartphone. A complete explanation can be found at the website: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
